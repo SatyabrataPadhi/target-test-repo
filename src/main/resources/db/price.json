@@ -1,0 +1,15 @@
+[{
+  "_id": {
+    "$oid": "602942dc04e6b22c5867ef46"
+  },
+  "product_id": 1000,
+  "value": 200.91,
+  "currency_code": "USD"
+},{
+  "_id": {
+    "$oid": "6029435704e6b22c5867ef47"
+  },
+  "product_id": 1001,
+  "value": 205.23,
+  "currency_code": "USD"
+}]

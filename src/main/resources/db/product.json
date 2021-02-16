@@ -1,0 +1,7 @@
+[{
+  "_id": {
+    "$oid": "602ac24fc9f9c939e874372d"
+  },
+  "product_id": 1000,
+  "name": "test name"
+}]
