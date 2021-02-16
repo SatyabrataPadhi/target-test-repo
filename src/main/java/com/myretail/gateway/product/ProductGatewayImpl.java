@@ -4,27 +4,38 @@ import com.myretail.entity.Price;
 import com.myretail.entity.Product;
 import com.myretail.exception.CustomException;
 import com.myretail.exception.Error;
+import com.myretail.gateway.http.HttpGateway;
 import com.myretail.repository.PriceRepository;
 //import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.myretail.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ProductGatewayImpl implements ProductGateway{
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductGatewayImpl.class);
     @Autowired
     private PriceRepository priceRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private MongoTemplate template;
+    @Autowired
+    private HttpGateway<Product> httpGateway;
+    @Value("${product.service.url}")
+    private String serviceUrl;
     @Override
     public Product fetchProductById(Long productId) {
-        Product product = getProduct(productId);
+        Product product = httpGateway.executeGet(serviceUrl+productId, Product.class);
         if(product!=null && product.getPid()!=null) {
             Price price = priceRepository.findByProductId(productId);
             product.setPrice(price);
@@ -43,28 +54,7 @@ public class ProductGatewayImpl implements ProductGateway{
         product.setPrice(price);
         return product;
     }
-    private Product getProduct(Long pid){
-        Product product = productRepository.findByPid(pid);
-        return product;
+    public Product getProduct(Long pid){
+        return productRepository.findByPid(pid);
     }
-
-    public Product fetchProduct() {
-        // TODO:
-        //  Need to add the api call with circuit breaker pattern as the retail api does not work
-        //  hardcoding to return dummy product info from db
-        /*
-        try{
-         URI uri = URI.create();
-         return this.restTemplate.getForObject(uri, Product.class);
-         }catch(Exception e){
-         throw new CustomException(Error.SERVER_ERROR.getCode());
-         }
-        */
-        return null;
-    }
-
-    public void fallback() {
-        throw new CustomException(Error.SERVICE_UNAVAILABLE.getCode());
-    }
-
 }

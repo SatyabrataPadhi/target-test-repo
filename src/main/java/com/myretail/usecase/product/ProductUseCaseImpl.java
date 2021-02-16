@@ -18,4 +18,10 @@ public class ProductUseCaseImpl implements ProductUseCase{
     public Product updateProduct(Product product) {
         return productGateway.update(product);
     }
+
+    @Override
+    public Product getProduct(Long productId) {
+        return productGateway.getProduct(productId);
+    }
+
 }

@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  *
  */
 @SpringBootApplication
-@EnableMongoRepositories
 //@EnableCircuitBreaker
 public class App
 {

@@ -21,4 +21,11 @@ public enum Error {
             return code;
         }
 
+        public static String getMessage(String code){
+            for (Error e :Error.values()){
+                if(code.equalsIgnoreCase(e.getCode()))
+                    return e.getDescription();
+            }
+            return "Generic error";
+        }
 }
